@@ -5,6 +5,7 @@ __pycache__/
 data
 .vscode
 **/*.DS_Store
+*.txt
 
 # C extensions
 *.so

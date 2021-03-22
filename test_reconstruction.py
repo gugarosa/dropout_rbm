@@ -52,7 +52,7 @@ if __name__ == '__main__':
 
     # Gathering variables from arguments
     dataset = args.dataset
-    name = args.model_name
+    model = o.get_model('drbm').obj
     n_visible = args.n_visible
     n_hidden = args.n_hidden
     steps = args.steps
@@ -65,7 +65,6 @@ if __name__ == '__main__':
     epochs = args.epochs
     device = args.device
     seed = args.seed
-    model = o.get_model('drbm').obj
 
     # Checks for the name of device
     if device == 'cpu':
@@ -92,4 +91,4 @@ if __name__ == '__main__':
     _, _ = rbm.reconstruct(test)
     
     # Saving the model
-    torch.save(rbm, f'models/{n_hidden}hid_{lr}lr_{name}_{dataset}_{seed}.pth')
+    torch.save(rbm, f'models/{n_hidden}hid_{lr}lr_drbm_{dataset}_{seed}.pth')

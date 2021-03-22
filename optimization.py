@@ -104,3 +104,8 @@ if __name__ == '__main__':
 
     # Saves the history object to an output file
     history.save(f'models/{meta}_{n_hidden}hid_{lr}lr_drbm_{dataset}_{seed}.pkl')
+
+    # Opens an outbut file to save a variable
+    with open('best_p.txt', 'w') as f:
+        # Saves the best `p` parameter
+        f.write(str(history.best_agent[-1][0][0][0]))
