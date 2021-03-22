@@ -15,11 +15,12 @@ If you use our work to fulfill any of your needs, please cite us:
 
 ## Structure
 
+ * `models`: Holds the output history and models files.
  * `utils`
    * `loader.py`: Utility to load datasets and split them into training, validation and testing sets;
    * `objects.py`: Wraps objects instantiation for command line usage;
-   * `opt.py`:
-   * `target.py`:
+   * `opt.py`: Wraps the optimization pipeline;
+   * `target.py`: Wraps the optimization target.
    
    
 ---
@@ -44,15 +45,23 @@ In order to run the experiments, you can use `torchvision` to load pre-implement
 
 ## Usage
 
-### Model Training and Reconstruction
+### Model Optimization
 
-The experiment is conducted by pre-training an RBM architecture and post-evaluating them. To accomplish such a step, one needs to use the following script:
+The experiment is conducted by optimizating an architecture and post-evaluating them. To accomplish such a step, one needs to use the following script:
 
 ```Python
-python rbm_reconstruction.py -h
+python optimization.py -h
 ```
 
 *Note that `-h` invokes the script helper, which assists users in employing the appropriate parameters.*
+
+### Test Reconstruction
+
+Afterward, with the optimized Dropout parameter in hands, one can perform the final reconstruction over the testing test, as follows:
+
+```Python
+python test_reconstruction.py -h
+```
 
 ### Bash Script
 
