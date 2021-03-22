@@ -2,8 +2,6 @@ import argparse
 
 import torch
 
-from learnergy.math.metrics import calculate_ssim
-
 import utils.loader as l
 import utils.objects as o
 
@@ -17,31 +15,29 @@ def get_arguments():
     """
 
     # Creates the ArgumentParser
-    parser = argparse.ArgumentParser(usage='Trains, reconstructs and saves an RBM model.')
+    parser = argparse.ArgumentParser(usage='Trains, reconstructs and saves a model.')
 
-    parser.add_argument('dataset', help='Dataset identifier', choices=['mnist', 'fmnist', 'kmnist'])
-
-    parser.add_argument('model_name', help='Model identifier', choices=['rbm', 'drbm', 'edrbm', 'dcrbm'])
+    parser.add_argument('dataset', help='Dataset identifier', choices=['mnist', 'semeion', 'usps'])
 
     parser.add_argument('-n_visible', help='Number of visible units', type=int, default=784)
 
-    parser.add_argument('-n_hidden', help='Number of hidden units', type=int, default=128)
+    parser.add_argument('-n_hidden', help='Number of hidden units', type=int, default=400)
 
     parser.add_argument('-steps', help='Number of CD steps', type=int, default=1)
 
     parser.add_argument('-lr', help='Learning rate', type=float, default=0.1)
 
-    parser.add_argument('-momentum', help='Momentum', type=float, default=0)
+    parser.add_argument('-momentum', help='Momentum', type=float, default=0.0002)
 
-    parser.add_argument('-decay', help='Weight decay', type=float, default=0)
+    parser.add_argument('-decay', help='Weight decay', type=float, default=0.5)
 
     parser.add_argument('-temperature', help='Temperature', type=float, default=1)
 
     parser.add_argument('-p', help='Dropout probability', type=float, default=0.5)
 
-    parser.add_argument('-batch_size', help='Batch size', type=int, default=128)
+    parser.add_argument('-batch_size', help='Batch size', type=int, default=20)
 
-    parser.add_argument('-epochs', help='Number of training epochs', type=int, default=5)
+    parser.add_argument('-epochs', help='Number of training epochs', type=int, default=25)
 
     parser.add_argument('-device', help='CPU or GPU usage', choices=['cpu', 'cuda'])
 
@@ -69,6 +65,7 @@ if __name__ == '__main__':
     epochs = args.epochs
     device = args.device
     seed = args.seed
+    model = o.get_model('drbm').obj
 
     # Checks for the name of device
     if device == 'cpu':
@@ -84,25 +81,15 @@ if __name__ == '__main__':
     # Defining the torch seed
     torch.manual_seed(seed)
 
-    # Gathering the model
-    model = o.get_model(name).obj
-
     # Initializing the model
-    if name != 'drbm' or name != 'dcrbm':
-        rbm = model(n_visible=n_visible, n_hidden=n_hidden, steps=steps, learning_rate=lr,
-                    momentum=momentum, decay=decay, temperature=T, use_gpu=use_gpu)
-    else:
-        rbm = model(n_visible=n_visible, n_hidden=n_hidden, steps=steps, learning_rate=lr,
-                    momentum=momentum, decay=decay, temperature=T, dropout=p, use_gpu=use_gpu)
+    rbm = model(n_visible=n_visible, n_hidden=n_hidden, steps=steps, learning_rate=lr,
+                momentum=momentum, decay=decay, temperature=T, dropout=p, use_gpu=use_gpu)
 
     # Fitting the model
     rbm.fit(train, batch_size=batch_size, epochs=epochs)
 
     # Reconstructs the model
-    mse, visible_probs = rbm.reconstruct(test)
+    _, _ = rbm.reconstruct(test)
     
-    # Calculates the SSIM
-    ssim = calculate_ssim(visible_probs, test.data)
-
     # Saving the model
     torch.save(rbm, f'models/{n_hidden}hid_{lr}lr_{name}_{dataset}_{seed}.pth')

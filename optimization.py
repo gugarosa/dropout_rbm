@@ -18,7 +18,7 @@ def get_arguments():
     """
 
     # Creates the ArgumentParser
-    parser = argparse.ArgumentParser(usage='Optimizes a Dropout RBM over a validation set.')
+    parser = argparse.ArgumentParser(usage='Optimizes a model over the validation set.')
 
     parser.add_argument('dataset', help='Dataset identifier', choices=['mnist', 'semeion', 'usps'])
 
@@ -38,9 +38,9 @@ def get_arguments():
 
     parser.add_argument('-temp', help='Temperature', type=float, default=1)
 
-    parser.add_argument('-gpu', help='GPU usage', type=bool, default=True)
-
     parser.add_argument('-batch_size', help='Batch size', type=int, default=20)
+
+    parser.add_argument('-device', help='CPU or GPU usage', choices=['cpu', 'cuda'])
 
     parser.add_argument('-epochs', help='Number of training epochs', type=int, default=25)
 
@@ -69,7 +69,7 @@ if __name__ == '__main__':
     momentum = args.momentum
     decay = args.decay
     T = args.temp
-    gpu = args.gpu
+    device = args.device
     batch_size = args.batch_size
     epochs = args.epochs
     model = m.get_model('drbm').obj
@@ -81,6 +81,14 @@ if __name__ == '__main__':
     meta_heuristic = m.get_mh(meta).obj
     hyperparams = m.get_mh(meta).hyperparams
 
+    # Checks for the name of device
+    if device == 'cpu':
+        # Updates accordingly
+        use_gpu = False
+    else:
+        # Updates accordingly
+        use_gpu = True
+
     # Loads the data
     train, val, _ = l.load_dataset(name=dataset)
 
@@ -89,7 +97,7 @@ if __name__ == '__main__':
     np.random.seed(seed)
 
     # Initializes the optimization target
-    opt_fn = t.reconstruction(model, train, val, n_visible, n_hidden, steps, lr, momentum, decay, T, gpu, batch_size, epochs)
+    opt_fn = t.reconstruction(model, train, val, n_visible, n_hidden, steps, lr, momentum, decay, T, use_gpu, batch_size, epochs)
 
     # Running the optimization task
     history = o.optimize(meta_heuristic, opt_fn, n_agents, n_iterations, hyperparams)

@@ -62,7 +62,7 @@ def load_dataset(name='mnist', val_split=0.22, seed=0):
 
     # Splitting the training data into training/validation
     train, val = torch.utils.data.random_split(
-        train, [int(len(train) * (1 - val_split) + 1), int(len(train) * val_split)])
+        train, [int(len(train) * (1 - val_split)), int(len(train) * val_split)])
 
     # Loads the testing data
     test = DATASETS[name](root='./data', train=False, download=True,
