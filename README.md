@@ -8,7 +8,18 @@
 
 If you use our work to fulfill any of your needs, please cite us:
 
-```
+```BibTex
+@inproceedings{deRosa:21,
+  author={de Rosa, Gustavo H. and Roder, Mateus and Papa, Jo{\~a}o P.},
+  editor={Tavares, Jo{\~a}o Manuel R. S. and Papa, Jo{\~a}o Paulo and Gonz{\'a}lez Hidalgo, Manuel},
+  title={Fine-Tuning Dropout Regularization in Energy-Based Deep Learning},
+  booktitle={Progress in Pattern Recognition, Image Analysis, Computer Vision, and Applications},
+  year={2021},
+  publisher={Springer International Publishing},
+  address={Cham},
+  pages={99--108},
+  isbn={978-3-030-93420-0}
+}
 ```
 
 ---
